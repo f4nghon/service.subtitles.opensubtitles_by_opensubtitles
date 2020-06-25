@@ -9,6 +9,7 @@ import xbmcaddon
 import xbmcgui,xbmcplugin
 import xbmcvfs
 import uuid
+import HDRSubs
 
 __addon__ = xbmcaddon.Addon()
 __author__     = __addon__.getAddonInfo('author')
@@ -213,7 +214,12 @@ if params['action'] == 'search' or params['action'] == 'manualsearch':
 
 elif params['action'] == 'download':
   subs = Download(params["ID"], params["link"],params["format"])
+  convertsub = xbmcgui.Dialog().yesno("HDR support", "Convert subtitles to HDR format?")
   for sub in subs:
+    if convertsub:
+      HDRSubs.parsefile(sub, "343434")
+    else:
+      HDRSubs.parsefile(sub, "FFFFFF")
     listitem = xbmcgui.ListItem(label=sub)
     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=sub,listitem=listitem,isFolder=False)
 
